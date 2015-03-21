@@ -162,10 +162,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 pj -> borderRight = false;
                 break;
             default:
-            
-       
-        
-        
                 break;
         }
     }
@@ -174,7 +170,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main (void){
     GLFWwindow* window;
     glfwInit();
-    window = glfwCreateWindow(800, 800, "Game", NULL, NULL);
+    window = glfwCreateWindow(600, 600, "Game", NULL, NULL);
     if (!window){
         glfwTerminate();
         return -1;
@@ -185,44 +181,51 @@ int main (void){
     
     float temporal = 0.0;
     float delta = 0.0;
-    Bloque bloques[29];
+    Bloque bloques[35];
     //marco
 
-    bloques[0].setPositions(1,1);
-    bloques[1].setPositions(3,1);
-   bloques[2].setPositions(4,1);
-    bloques[3].setPositions(5,1);
-    bloques[4].setPositions(6,1);
-    bloques[5].setPositions(8,1);
-    bloques[6].setPositions(9,1);
-    bloques[7].setPositions(9,2);
-    bloques[8].setPositions(9,3);
-    bloques[9].setPositions(9,4);
-    bloques[10].setPositions(9,5);
-    bloques[11].setPositions(9,6);
-    bloques[12].setPositions(9,7);
-    bloques[13].setPositions(9,9);
-    bloques[14].setPositions(8,9);
-    bloques[15].setPositions(7,9);
-    bloques[16].setPositions(6,9);
-    bloques[17].setPositions(5,9);
-    bloques[18].setPositions(4,9);
-    bloques[19].setPositions(3,9);
-    bloques[20].setPositions(2,9);
-    bloques[21].setPositions(1,9);
-    bloques[22].setPositions(1,8);
-    bloques[23].setPositions(1,7);
-    bloques[24].setPositions(1,6);
-    bloques[25].setPositions(1,5);
-    bloques[26].setPositions(1,4);
-    bloques[27].setPositions(1,3);
-    bloques[28].setPositions(1,2); 
+    bloques[0].setPositions(0,0);
+    bloques[1].setPositions(0,1);
+   bloques[2].setPositions(0,2);
+    bloques[3].setPositions(0,5);
+    bloques[4].setPositions(1,7);
+    bloques[5].setPositions(1,8);
+    bloques[6].setPositions(1,9);
+    bloques[7].setPositions(2,0);
+    bloques[8].setPositions(2,4);
+    bloques[9].setPositions(2,5);
+    bloques[10].setPositions(3,0);
+    bloques[11].setPositions(3,2);
+    bloques[12].setPositions(3,5);
+    bloques[13].setPositions(3,8);
+    bloques[14].setPositions(3,9);
+    bloques[15].setPositions(4,2);
+    bloques[16].setPositions(4,3);
+    bloques[17].setPositions(5,4);
+    bloques[18].setPositions(5,5);
+    bloques[19].setPositions(5,9);
+    bloques[20].setPositions(6,0);
+    bloques[21].setPositions(6,1);
+    bloques[22].setPositions(6,2);
+    bloques[23].setPositions(6,9);
+    bloques[24].setPositions(7,0);
+    bloques[25].setPositions(7,2);
+    bloques[26].setPositions(7,5);
+    bloques[27].setPositions(8,0);
+    bloques[28].setPositions(8,2); 
+    bloques[29].setPositions(8,4); 
+    bloques[30].setPositions(8,5); 
+    bloques[31].setPositions(9,0); 
+    bloques[32].setPositions(9,1); 
+    bloques[33].setPositions(9,2); 
+    bloques[34].setPositions(9,8); 
+   
    //marco
 
     
     
     Player pj;
-    pj.setPositions(2, 1);
+    pj.setPositions(1, 0);
     
     glfwSetWindowUserPointer(window, &pj);
     glfwSetKeyCallback(window, key_callback);
@@ -237,19 +240,10 @@ int main (void){
         GLfloat aspect = _width / _height;
         glOrtho(-aspect*100, aspect*100, -100.0f, 100.0f, -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
-        glColor3f(2 * sin (0.5 * 5*glfwGetTime()), 0.4 * cos(5*glfwGetTime()), 0.7 * sin (1*glfwGetTime()));
-        glBegin(GL_QUADS);
-        for (int i = 0; i < 28; i++) {
-            glVertex2d(bloques[i].getX(),   bloques[i].getY());
-            glVertex2d(bloques[i].getX() + 20,  bloques[i].getY());
-            glVertex2d(bloques[i].getX() + 20,  bloques[i].getY() + 20);
-            glVertex2d(bloques[i].getX(),  bloques[i].getY() + 20);
-            pj.compareBorder(bloques[i]);
-        }
-        
-        glEnd();
-        
-        glColor3f(0, 0, 0);
+
+//player
+
+        glColor3f(1, 0, 0);
         glBegin(GL_QUADS);
         glVertex2d(pj.getX(),   pj.getY());
         glVertex2d(pj.getX() + 20,  pj.getY());
@@ -261,6 +255,20 @@ int main (void){
         
         glEnd();
 
+//bloques
+
+        glColor3f(2 * sin (0.5 * 5*glfwGetTime()), 0.4 * cos(5*glfwGetTime()), 0.7 * sin (1*glfwGetTime()));
+        glBegin(GL_QUADS);
+        for (int i = 0; i < 35; i++) {
+            glVertex2d(bloques[i].getX(),   bloques[i].getY());
+            glVertex2d(bloques[i].getX() + 20,  bloques[i].getY());
+            glVertex2d(bloques[i].getX() + 20,  bloques[i].getY() + 20);
+            glVertex2d(bloques[i].getX(),  bloques[i].getY() + 20);
+            pj.compareBorder(bloques[i]);
+        }
+        
+        glEnd();
+        
       
 
         glfwSwapBuffers(window);
