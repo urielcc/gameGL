@@ -31,7 +31,6 @@ public:
 };
 
 class Player : public Bloque {
-
 public:
     void moveX(int newPosX){
         this->posX = newPosX;
@@ -40,7 +39,6 @@ public:
         this->posY = newPosY;
     }
     void move(float delta){
-        cout << y << " - "<<coordsY[posY];
         if(x < coordsX[posX])
             x+=delta;
         if(x > coordsX[posX])
@@ -53,8 +51,10 @@ public:
     }
 };
 
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
+    
     switch (key) {
         case GLFW_KEY_UP:
             pj->moveY(pj->posY - 1);
@@ -71,8 +71,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         default:
             break;
     }
-    
-    
 }
 
 int main (void){
@@ -89,17 +87,15 @@ int main (void){
     
     float temporal = 0.0;
     float delta = 0.0;
-    Bloque bloques[5];
-    bloques[0].setPositions(0,0);
-    bloques[1].setPositions(0,3);
-    bloques[2].setPositions(3,3);
-    bloques[3].setPositions(4,10);
-    bloques[4].setPositions(10,10);
+    Bloque bloques[1];
+    bloques[0].setPositions(5,5);
+    
     Player pj;
-    pj.setPositions(1, 1);
+    pj.setPositions(0, 0);
     
     glfwSetWindowUserPointer(window, &pj);
     glfwSetKeyCallback(window, key_callback);
+    
     while (!glfwWindowShouldClose(window)) {
         delta = glfwGetTime() - temporal;
         temporal = glfwGetTime();
@@ -119,13 +115,16 @@ int main (void){
             glVertex2d(bloques[i].getX(),  bloques[i].getY() + 20);
         }
         
+        glEnd();
+        
+        glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
         glVertex2d(pj.getX(),   pj.getY());
         glVertex2d(pj.getX() + 20,  pj.getY());
         glVertex2d(pj.getX() + 20,  pj.getY() + 20);
         glVertex2d(pj.getX(),  pj.getY() + 20);
-        pj.move(delta * 50);
+        //pj.move(delta * 50);
         glEnd();
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
