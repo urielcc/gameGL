@@ -153,8 +153,8 @@ int main (void){
         glVertex2d(pj.getX() + 20,  pj.getY() + 20);
         glVertex2d(pj.getX(),  pj.getY() + 20);
         
+            pj.move(delta * 50);
         
-        pj.move(delta * 50);
         
         glEnd();
         glfwSwapBuffers(window);
