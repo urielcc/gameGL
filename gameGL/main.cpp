@@ -30,6 +30,13 @@ public:
     }
 };
 
+class Aceite : public Bloque {
+    
+public:
+    
+    
+};
+
 class Player : public Bloque {
 public:
 
@@ -38,15 +45,17 @@ public:
     /*bool borderLowerX = false;
     bool borderUpperY = true;
     bool borderLowerY = false; */
-
+    bool onAceite = false;
     bool isMoveX = false;
     bool isMoveY = false;
 
     void moveX(int newPosX){
-        this->posX = newPosX;
+        if(newPosX < 10 && newPosX >= 0)
+            this->posX = newPosX;
     }
     void moveY(int newPosY){
-        this->posY = newPosY;
+        if(newPosY < 10 && newPosY >= 0)
+            this->posY = newPosY;
     }
     
     void move(float delta){
@@ -80,18 +89,26 @@ public:
             x += delta;
         }
     }
-     void compareLowerBorder(Bloque bloque){
+    void compareLowerBorder(Bloque bloque){
             if (bloque.posY == this -> posY + 1 && bloque.posX == this -> posX){
                 this -> borderLower = true;
             }
 
-            else{ 
+            else{
 
                 this -> borderLower = false;
             }
-     }
+    }
+    
+    void isBloqueAceite(Aceite aceite){
+        if(aceite.posY == this -> posY && aceite.posX == this -> posX){
+            onAceite = true;
+        }
+        else{
+            onAceite = false;
+        }
+    }
 };
-
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
@@ -179,7 +196,7 @@ int main (void){
         glVertex2d(pj.getX() + 20,  pj.getY() + 20);
         glVertex2d(pj.getX(),  pj.getY() + 20);
         
-            pj.move(delta * 50);
+            pj.move(delta * 150);
         
         
         glEnd();
