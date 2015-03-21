@@ -32,12 +32,15 @@ public:
 
 class Player : public Bloque {
 public:
-    bool isMove = false;
+
 
    bool borderLower = false;
     /*bool borderLowerX = false;
     bool borderUpperY = true;
     bool borderLowerY = false; */
+
+    bool isMoveX = false;
+    bool isMoveY = false;
 
     void moveX(int newPosX){
         this->posX = newPosX;
@@ -45,15 +48,37 @@ public:
     void moveY(int newPosY){
         this->posY = newPosY;
     }
+    
     void move(float delta){
-        cout << posY;
-        if(y > coordsY[posY]){
-            y-=delta;
-        }else{
+        moveOnX(delta);
+        moveOnY(delta);
+
+    }
+    
+    void moveOnY(float delta){
+        if(y < coordsY[posY] + 1 && y > coordsY[posY] - 1){
+            isMoveY = false;
             y = coordsY[posY];
-            isMove = false;
         }
-        
+        else if(y > coordsY[posY]){
+            y -= delta;
+        }
+        else if(y < coordsY[posY]){
+            y += delta;
+        }
+    }
+    
+    void moveOnX(float delta){
+        if(x < coordsX[posX] + 1 && x > coordsX[posX] - 1){
+            isMoveX = false;
+            x = coordsX[posX];
+        }
+        else if(x > coordsX[posX]){
+            x -= delta;
+        }
+        else if(x < coordsX[posX]){
+            x += delta;
+        }
     }
      void compareLowerBorder(Bloque bloque){
             if (bloque.posY == this -> posY + 1 && bloque.posX == this -> posX){
@@ -70,25 +95,30 @@ public:
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
-    
-    if(pj -> isMove == false){
+
+    if(pj -> isMoveX == false && pj->isMoveY == false){
+
         switch (key) {
             case GLFW_KEY_UP:
+                pj-> moveY(pj->posY - 1);
+                pj-> isMoveY = true;
                 break;
             case GLFW_KEY_DOWN:
-                if(pj -> borderLower == false){
-                    pj-> moveY(pj -> posY + 1);
-                  
-                    pj-> isMove = true;
 
-            
-                }  
+                if(pj -> borderLower == false){
+    
+
+                pj-> moveY(pj->posY + 1);
+                pj-> isMoveY = true;
+                }
                 break;
             case GLFW_KEY_LEFT:
-                cout << "arriba";
+                pj-> moveX(pj->posX - 1);
+                pj-> isMoveX = true;
                 break;
             case GLFW_KEY_RIGHT:
-                cout << "arriba";
+                pj-> moveX(pj->posX + 1);
+                pj-> isMoveX = true;
                 break;
             default:
                 break;
@@ -148,6 +178,7 @@ int main (void){
         glVertex2d(pj.getX() + 20,  pj.getY());
         glVertex2d(pj.getX() + 20,  pj.getY() + 20);
         glVertex2d(pj.getX(),  pj.getY() + 20);
+        
         
         pj.move(delta * 50);
         
