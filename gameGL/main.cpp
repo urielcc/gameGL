@@ -42,9 +42,9 @@ public:
 
 
    bool borderLower = false;
-    bool borderUpper = true;
-    bool borderLeft = true;
-    bool borderRight = true;
+    bool borderUpper = false;
+    bool borderLeft = false;
+    bool borderRight = false;
     bool onAceite = false;
 
     bool isMoveX = false;
@@ -135,6 +135,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 pj-> moveY(pj->posY - 1);
                 pj-> isMoveY = true;
             }
+                pj -> borderUpper = false;
                 break;
             case GLFW_KEY_DOWN:
 
@@ -144,20 +145,27 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 pj-> moveY(pj->posY + 1);
                 pj-> isMoveY = true;
                 }
+                 pj -> borderLower = false;
                 break;
             case GLFW_KEY_LEFT:
             if(pj -> borderLeft == false){
                 pj-> moveX(pj->posX - 1);
                 pj-> isMoveX = true;
             }
+                pj -> borderLeft = false;
                 break;
             case GLFW_KEY_RIGHT:
             if(pj -> borderRight == false){
                 pj-> moveX(pj->posX + 1);
                 pj-> isMoveX = true;
             }
+                pj -> borderRight = false;
                 break;
             default:
+            
+       
+        
+        
                 break;
         }
     }
@@ -182,7 +190,7 @@ int main (void){
 
     bloques[0].setPositions(1,1);
     bloques[1].setPositions(3,1);
-   /* bloques[2].setPositions(4,1);
+   bloques[2].setPositions(4,1);
     bloques[3].setPositions(5,1);
     bloques[4].setPositions(6,1);
     bloques[5].setPositions(8,1);
@@ -208,7 +216,7 @@ int main (void){
     bloques[25].setPositions(1,5);
     bloques[26].setPositions(1,4);
     bloques[27].setPositions(1,3);
-    bloques[28].setPositions(1,2); */
+    bloques[28].setPositions(1,2); 
    //marco
 
     
@@ -253,14 +261,13 @@ int main (void){
         
         glEnd();
 
-        /*pj.borderLower = false;
-        pj.borderUpper = false;
-        pj.borderLeft = false;
-        pj.borderRight = false;*/
+      
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
     }
+
     glfwTerminate();
 }
 
