@@ -170,7 +170,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main (void){
     GLFWwindow* window;
     glfwInit();
-    window = glfwCreateWindow(600, 600, "Game", NULL, NULL);
+    window = glfwCreateWindow(200, 200, "Game", NULL, NULL);
     if (!window){
         glfwTerminate();
         return -1;
@@ -181,12 +181,15 @@ int main (void){
     
     float temporal = 0.0;
     float delta = 0.0;
+
+    Bloque meta;
+    meta.setPositions(9,9);
     Bloque bloques[35];
     //marco
 
     bloques[0].setPositions(0,0);
     bloques[1].setPositions(0,1);
-   bloques[2].setPositions(0,2);
+    bloques[2].setPositions(0,2);
     bloques[3].setPositions(0,5);
     bloques[4].setPositions(1,7);
     bloques[5].setPositions(1,8);
@@ -268,8 +271,26 @@ int main (void){
         }
         
         glEnd();
+
+           glColor3f(0,0,1);
+        glBegin(GL_QUADS);
         
-      
+            glVertex2d(meta.getX(),   meta.getY());
+            glVertex2d(meta.getX() + 20,  meta.getY());
+            glVertex2d(meta.getX() + 20, meta.getY() + 20);
+            glVertex2d(meta.getX(),  meta.getY() + 20);
+        
+        glEnd();
+        
+        if (pj.posX == 9 && pj.posY == 9) {
+            glColor3f(.9 + .1 * cos(glfwGetTime()), .9 + .1 * sin(glfwGetTime()), 0);
+        glBegin(GL_QUADS);
+        glVertex2d(-70,  -70);
+        glVertex2d( 70,  -70);
+        glVertex2d( 70,   70);
+        glVertex2d(-70,   70);
+        glEnd();
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
