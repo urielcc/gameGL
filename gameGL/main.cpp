@@ -32,6 +32,7 @@ public:
 
 class Player : public Bloque {
 public:
+    bool isMove = false;
     void moveX(int newPosX){
         this->posX = newPosX;
     }
@@ -39,14 +40,13 @@ public:
         this->posY = newPosY;
     }
     void move(float delta){
-        if(x < coordsX[posX])
-            x+=delta;
-        if(x > coordsX[posX])
-            x-=delta;
-        if(y < coordsY[posY])
-            y+=delta;
-        if(y > coordsY[posY])
+        cout << posY;
+        if(y > coordsY[posY]){
             y-=delta;
+        }else{
+            y = coordsY[posY];
+            isMove = false;
+        }
         
     }
 };
@@ -54,22 +54,23 @@ public:
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
-    
-    switch (key) {
-        case GLFW_KEY_UP:
-            pj->moveY(pj->posY - 1);
-            break;
-        case GLFW_KEY_DOWN:
-            pj->moveY(pj->posY + 1);
-            break;
-        case GLFW_KEY_LEFT:
-            cout << "arriba";
-            break;
-        case GLFW_KEY_RIGHT:
-            cout << "arriba";
-            break;
-        default:
-            break;
+    if(pj -> isMove == false){
+        switch (key) {
+            case GLFW_KEY_UP:
+                break;
+            case GLFW_KEY_DOWN:
+                pj-> moveY(pj->posY + 1);
+                pj-> isMove = true;
+                break;
+            case GLFW_KEY_LEFT:
+                cout << "arriba";
+                break;
+            case GLFW_KEY_RIGHT:
+                cout << "arriba";
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -90,8 +91,9 @@ int main (void){
     Bloque bloques[1];
     bloques[0].setPositions(5,5);
     
+    
     Player pj;
-    pj.setPositions(0, 0);
+    pj.setPositions(1, 1);
     
     glfwSetWindowUserPointer(window, &pj);
     glfwSetKeyCallback(window, key_callback);
@@ -123,7 +125,9 @@ int main (void){
         glVertex2d(pj.getX() + 20,  pj.getY());
         glVertex2d(pj.getX() + 20,  pj.getY() + 20);
         glVertex2d(pj.getX(),  pj.getY() + 20);
-        //pj.move(delta * 50);
+        
+        pj.move(delta * 50);
+        
         glEnd();
         glfwSwapBuffers(window);
         glfwPollEvents();
