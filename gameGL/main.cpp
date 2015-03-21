@@ -35,9 +35,9 @@ public:
 
 
    bool borderLower = false;
-    /*bool borderLowerX = false;
-    bool borderUpperY = true;
-    bool borderLowerY = false; */
+    bool borderUpper = true;
+    bool borderLeft = true;
+    bool borderRight = true;
 
     bool isMoveX = false;
     bool isMoveY = false;
@@ -80,16 +80,26 @@ public:
             x += delta;
         }
     }
-     void compareLowerBorder(Bloque bloque){
+     void compareBorder(Bloque bloque) {
             if (bloque.posY == this -> posY + 1 && bloque.posX == this -> posX){
                 this -> borderLower = true;
             }
+           
 
-            else{ 
-
-                this -> borderLower = false;
+            if (bloque.posY == this -> posY - 1 && bloque.posX == this -> posX){
+                this -> borderUpper = true;
             }
-     }
+            
+
+            if (bloque.posY == this -> posY && bloque.posX == this -> posX - 1){
+                this -> borderLeft = true;
+            }
+            
+             if (bloque.posY == this -> posY && bloque.posX == this -> posX + 1){
+                this -> borderRight = true;
+            }
+           }
+
 };
 
 
@@ -100,8 +110,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
         switch (key) {
             case GLFW_KEY_UP:
+                if(pj -> borderUpper == false){
                 pj-> moveY(pj->posY - 1);
                 pj-> isMoveY = true;
+            }
                 break;
             case GLFW_KEY_DOWN:
 
@@ -113,12 +125,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 }
                 break;
             case GLFW_KEY_LEFT:
+            if(pj -> borderLeft == false){
                 pj-> moveX(pj->posX - 1);
                 pj-> isMoveX = true;
+            }
                 break;
             case GLFW_KEY_RIGHT:
+            if(pj -> borderRight == false){
                 pj-> moveX(pj->posX + 1);
                 pj-> isMoveX = true;
+            }
                 break;
             default:
                 break;
@@ -140,12 +156,44 @@ int main (void){
     
     float temporal = 0.0;
     float delta = 0.0;
-    Bloque bloques[1];
-    bloques[0].setPositions(1,5);
+    Bloque bloques[29];
+    //marco
+
+    bloques[0].setPositions(1,1);
+    bloques[1].setPositions(3,1);
+   /* bloques[2].setPositions(4,1);
+    bloques[3].setPositions(5,1);
+    bloques[4].setPositions(6,1);
+    bloques[5].setPositions(8,1);
+    bloques[6].setPositions(9,1);
+    bloques[7].setPositions(9,2);
+    bloques[8].setPositions(9,3);
+    bloques[9].setPositions(9,4);
+    bloques[10].setPositions(9,5);
+    bloques[11].setPositions(9,6);
+    bloques[12].setPositions(9,7);
+    bloques[13].setPositions(9,9);
+    bloques[14].setPositions(8,9);
+    bloques[15].setPositions(7,9);
+    bloques[16].setPositions(6,9);
+    bloques[17].setPositions(5,9);
+    bloques[18].setPositions(4,9);
+    bloques[19].setPositions(3,9);
+    bloques[20].setPositions(2,9);
+    bloques[21].setPositions(1,9);
+    bloques[22].setPositions(1,8);
+    bloques[23].setPositions(1,7);
+    bloques[24].setPositions(1,6);
+    bloques[25].setPositions(1,5);
+    bloques[26].setPositions(1,4);
+    bloques[27].setPositions(1,3);
+    bloques[28].setPositions(1,2); */
+   //marco
+
     
     
     Player pj;
-    pj.setPositions(1, 1);
+    pj.setPositions(2, 1);
     
     glfwSetWindowUserPointer(window, &pj);
     glfwSetKeyCallback(window, key_callback);
@@ -160,14 +208,14 @@ int main (void){
         GLfloat aspect = _width / _height;
         glOrtho(-aspect*100, aspect*100, -100.0f, 100.0f, -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
-        glColor3f(sin (0.8 * 5*glfwGetTime()), 0.4 * cos(2*glfwGetTime()), 0.7 * sin (3*glfwGetTime()));
+        glColor3f(2 * sin (0.5 * 5*glfwGetTime()), 0.4 * cos(5*glfwGetTime()), 0.7 * sin (1*glfwGetTime()));
         glBegin(GL_QUADS);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 28; i++) {
             glVertex2d(bloques[i].getX(),   bloques[i].getY());
             glVertex2d(bloques[i].getX() + 20,  bloques[i].getY());
             glVertex2d(bloques[i].getX() + 20,  bloques[i].getY() + 20);
             glVertex2d(bloques[i].getX(),  bloques[i].getY() + 20);
-            pj.compareLowerBorder(bloques[i]);
+            pj.compareBorder(bloques[i]);
         }
         
         glEnd();
@@ -180,11 +228,18 @@ int main (void){
         glVertex2d(pj.getX(),  pj.getY() + 20);
         
         
-        pj.move(delta * 50);
+        pj.move(delta * 150);
         
         glEnd();
+
+        /*pj.borderLower = false;
+        pj.borderUpper = false;
+        pj.borderLeft = false;
+        pj.borderRight = false;*/
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glfwTerminate();
 }
+
