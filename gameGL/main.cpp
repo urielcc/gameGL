@@ -40,8 +40,7 @@ public:
 class Player : public Bloque {
 public:
 
-
-   bool borderLower = false;
+    bool borderLower = false;
     bool borderUpper = false;
     bool borderLeft = false;
     bool borderRight = false;
@@ -49,20 +48,58 @@ public:
 
     bool isMoveX = false;
     bool isMoveY = false;
+    
+    bool isKey = false;
+    
+    int dirX = 0;
+    int dirY = 0;
 
     void moveX(int newPosX){
-        if(newPosX < 10 && newPosX >= 0)
+        if(newPosX < 10 && newPosX >= 0){
+            if(this->posX > newPosX){
+                dirX = -1;
+            }else if(this->posX < newPosX){
+                dirX = 1;
+            }
+            
             this->posX = newPosX;
+        }
     }
     void moveY(int newPosY){
-        if(newPosY < 10 && newPosY >= 0)
+        if(newPosY < 10 && newPosY >= 0){
+            if(this->posY > newPosY){
+                dirY = -1;
+            }else if(this->posY < newPosY){
+                dirY = 1;
+            }
             this->posY = newPosY;
+        }
     }
     
     void move(float delta){
+        
         moveOnX(delta);
         moveOnY(delta);
+        
+        if(onAceite == true && isMoveX == true){
+            cout << "left  " << borderLeft << " right "<< borderRight << "\n";
+            if(borderLeft == true || borderRight == true){
+                onAceite = false;
+            }else{
+                cout << "Aceite " << dirX;
+                moveX(posX + dirX);
+            }
+        }
 
+        if(onAceite == true && isMoveY == true){
+            cout << "left  " << borderUpper << " right "<< borderLower << "\n";
+            if(borderUpper == true || borderLower == true){
+                onAceite = false;
+            }else{
+                cout << "Aceite " << dirY;
+                moveY(posY + dirY);
+            }
+        }
     }
     
     void moveOnY(float delta){
@@ -118,9 +155,6 @@ public:
         if(aceite.posY == this -> posY && aceite.posX == this -> posX){
             onAceite = true;
         }
-        else{
-            onAceite = false;
-        }
     }
 };
 
@@ -128,7 +162,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
 
     if(pj -> isMoveX == false && pj->isMoveY == false){
-
+        pj -> isKey = true;
         switch (key) {
             case GLFW_KEY_UP:
                 if(pj -> borderUpper == false){
@@ -168,6 +202,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         
                 break;
         }
+        pj->borderLower = false;
+        pj->borderUpper = false;
+        pj->borderLeft = false;
+        pj->borderRight = false;
+
     }
 }
 
@@ -219,7 +258,9 @@ int main (void){
     bloques[28].setPositions(1,2); 
    //marco
 
-    
+    Aceite aceite[2];
+    aceite[0].setPositions(5, 5);
+    aceite[1].setPositions(5, 7);
     
     Player pj;
     pj.setPositions(2, 1);
@@ -249,6 +290,20 @@ int main (void){
         
         glEnd();
         
+        glColor3f(0, 1, 0);
+        glBegin(GL_QUADS);
+        for (int i = 0; i < 2; i++) {
+            glVertex2d(aceite[i].getX(),   aceite[i].getY());
+            glVertex2d(aceite[i].getX() + 20,  aceite[i].getY());
+            glVertex2d(aceite[i].getX() + 20,  aceite[i].getY() + 20);
+            glVertex2d(aceite[i].getX(),  aceite[i].getY() + 20);
+            pj.isBloqueAceite(aceite[i]);
+        }
+        
+        
+        glEnd();
+        
+        
         glColor3f(0, 0, 0);
         glBegin(GL_QUADS);
         glVertex2d(pj.getX(),   pj.getY());
@@ -257,11 +312,8 @@ int main (void){
         glVertex2d(pj.getX(),  pj.getY() + 20);
         
         pj.move(delta * 150);
-
         
         glEnd();
-
-      
 
         glfwSwapBuffers(window);
         glfwPollEvents();
