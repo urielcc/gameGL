@@ -32,8 +32,16 @@ public:
 
 class Player : public Bloque {
 public:
+
+
+   bool borderLower = false;
+    /*bool borderLowerX = false;
+    bool borderUpperY = true;
+    bool borderLowerY = false; */
+
     bool isMoveX = false;
     bool isMoveY = false;
+
     void moveX(int newPosX){
         this->posX = newPosX;
     }
@@ -72,20 +80,37 @@ public:
             x += delta;
         }
     }
+     void compareLowerBorder(Bloque bloque){
+            if (bloque.posY == this -> posY + 1 && bloque.posX == this -> posX){
+                this -> borderLower = true;
+            }
+
+            else{ 
+
+                this -> borderLower = false;
+            }
+     }
 };
 
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     Player * pj = reinterpret_cast<Player *>(glfwGetWindowUserPointer(window));
+
     if(pj -> isMoveX == false && pj->isMoveY == false){
+
         switch (key) {
             case GLFW_KEY_UP:
                 pj-> moveY(pj->posY - 1);
                 pj-> isMoveY = true;
                 break;
             case GLFW_KEY_DOWN:
+
+                if(pj -> borderLower == false){
+    
+
                 pj-> moveY(pj->posY + 1);
                 pj-> isMoveY = true;
+                }
                 break;
             case GLFW_KEY_LEFT:
                 pj-> moveX(pj->posX - 1);
@@ -116,7 +141,7 @@ int main (void){
     float temporal = 0.0;
     float delta = 0.0;
     Bloque bloques[1];
-    bloques[0].setPositions(5,5);
+    bloques[0].setPositions(1,5);
     
     
     Player pj;
@@ -137,11 +162,12 @@ int main (void){
         glMatrixMode(GL_MODELVIEW);
         glColor3f(sin (0.8 * 5*glfwGetTime()), 0.4 * cos(2*glfwGetTime()), 0.7 * sin (3*glfwGetTime()));
         glBegin(GL_QUADS);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             glVertex2d(bloques[i].getX(),   bloques[i].getY());
             glVertex2d(bloques[i].getX() + 20,  bloques[i].getY());
             glVertex2d(bloques[i].getX() + 20,  bloques[i].getY() + 20);
             glVertex2d(bloques[i].getX(),  bloques[i].getY() + 20);
+            pj.compareLowerBorder(bloques[i]);
         }
         
         glEnd();
